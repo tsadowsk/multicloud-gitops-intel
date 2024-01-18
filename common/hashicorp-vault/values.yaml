@@ -18,6 +18,28 @@ vault:
     # TOMEK: SGX SHOULD BE DISABLED BY DEFAULT
     # sgx: false
 
+    # TOMEK: MOVE IT TO OTHER PLACE AND ADD CONDITION IF SGX==true THEN....?
+    resources:
+      limits:
+        sgx.intel.com/epc: 1Gi
+      requests:
+        sgx.intel.com/epc: 1Gi
+
+    # TOMEK: MOVE IT TO OTHER PLACE AND ADD CONDITION IF SGX==true THEN....?
+    statefulSet:
+      securityContext:
+        container:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            seccompProfile:
+              type: RuntimeDefault
+        pod:
+          fsGroup: 107
+          runAsGroup: 107
+          runAsUser: 100
+
     standalone:
       config: |
         ui = true

@@ -32,24 +32,3 @@ server:
 
   readinessProbe:
     path: "/v1/sys/health?uninitcode=204"
-
-  resources:
-    limits:
-      sgx.intel.com/epc: 1Gi
-    requests:
-      sgx.intel.com/epc: 1Gi
-
-  statefulSet:
-    securityContext:
-      container:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          seccompProfile:
-            type: RuntimeDefault
-      pod:
-        fsGroup: 107
-        runAsGroup: 107
-        runAsUser: 100
-

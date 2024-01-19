@@ -237,8 +237,9 @@ for users looking to use this chart with Consul Helm.
 */}}
 {{- define "vault.args" -}}
   {{- if .Values.server.sgx }}
-          - |
-            server --dev -config=/vault/config/extraconfig-from-values.hcl
+          - server
+          - --dev
+          - -config=/vault/config/extraconfig-from-values.hcl
   {{- else }}
     {{ if or (eq .mode "standalone") (eq .mode "ha") }}
           - |

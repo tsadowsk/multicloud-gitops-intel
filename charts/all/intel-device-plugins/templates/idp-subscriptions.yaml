@@ -13,6 +13,8 @@ kind: Subscription
 metadata:
   labels:
     operators.coreos.com/intel-device-plugins-operator.openshiftoperators: ""
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   name: intel-device-plugins-operator
   namespace: openshift-operators
 spec:

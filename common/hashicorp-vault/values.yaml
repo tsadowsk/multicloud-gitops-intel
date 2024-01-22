@@ -81,3 +81,6 @@ vault:
     image:
       repository: "docker.io/seahorse910/sgx-gramine"
       tag: "rh-vault-1.15.3-ubi-sgx-gramine-loaderuid-vault107-threads512-vol"
+
+    readinessProbe:
+      enabled: false

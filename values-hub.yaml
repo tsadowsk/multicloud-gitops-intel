@@ -3,6 +3,7 @@ clusterGroup:
   isHubCluster: true
 
   namespaces:
+    - openshift-nfd
     - open-cluster-management
     - vault
     - golang-external-secrets
@@ -16,10 +17,18 @@ clusterGroup:
       channel: release-2.8
       #csv: advanced-cluster-management.v2.6.1
 
+    nfd:
+      name: nfd
+      namespace: openshift-nfd
+      channel: stable
+      source: redhat-operators
+
   projects:
+    - openshift-nfd
     - hub
     - config-demo
     - hello-world
+    - openshift-operators
 
   # Explicitly mention the cluster-state based overrides we plan to use for this pattern.
   # We can use self-referential variables because the chart calls the tpl function with these variables defined
@@ -44,6 +53,18 @@ clusterGroup:
   #   - '/overrides/values-{{ $.Values.global.localClusterDomain }}.yaml'
 
   applications:
+    nfd:
+      name: nfd
+      namespace: openshift-nfd
+      project: openshift-nfd
+      path: charts/all/nfd
+
+    intel-device-plugins:
+      name: intel-device-plugins
+      namespace: openshift-operators
+      project: openshift-operators
+      path: charts/all/intel-device-plugins
+
     acm:
       name: acm
       namespace: open-cluster-management

@@ -9,7 +9,6 @@ clusterGroup:
     - golang-external-secrets
     - config-demo
     - hello-world
-    - openshift-operators
 
   subscriptions:
     acm:

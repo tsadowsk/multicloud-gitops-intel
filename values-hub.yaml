@@ -23,6 +23,12 @@ clusterGroup:
       channel: stable
       source: redhat-operators
 
+    intel-device-plugins:
+      name: intel-device-plugins
+      namespace: openshift-operators
+      channel: alpha
+      source: certified-operators
+
   projects:
     - openshift-nfd
     - hub

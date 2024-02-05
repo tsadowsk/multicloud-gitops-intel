@@ -65,11 +65,11 @@ clusterGroup:
       project: openshift-nfd
       path: charts/all/nfd
 
-    # intel-device-plugins:
-    #   name: intel-device-plugins
-    #   namespace: openshift-operators
-    #   project: openshift-operators
-    #   path: charts/all/intel-device-plugins
+    intel-device-plugins:
+      name: intel-device-plugins
+      namespace: openshift-operators
+      project: openshift-operators
+      path: charts/all/intel-device-plugins
 
     acm:
       name: acm

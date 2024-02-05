@@ -37,7 +37,13 @@ spec:
                 - name: HTTPS_PROXY
                   value: http://proxy-us.intel.com:912
                 - name: NO_PROXY
-                  value: apps.berry.fm.intel.com,.svc.cluster.local
+                  value: .berry.fm.intel.com,.cluster.local,.intel.com,.svc,10.105.195.0/24,10.128.0.0/14,127.0.0.1,172.30.0.0/16,api-int.berry.fm.intel.com,localhost
+                - name: http_proxy
+                  value: http://proxy-us.intel.com:912
+                - name: https_proxy
+                  value: http://proxy-us.intel.com:912
+                - name: no_proxy
+                  value: .berry.fm.intel.com,.cluster.local,.intel.com,.svc,10.105.195.0/24,10.128.0.0/14,127.0.0.1,172.30.0.0/16,api-int.berry.fm.intel.com,localhost
                 {{- end }}
               workingDir: /git/repo
               # We have a default timeout of 600s for each playbook. Can be overridden

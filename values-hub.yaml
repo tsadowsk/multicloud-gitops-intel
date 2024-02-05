@@ -25,7 +25,7 @@ clusterGroup:
       source: redhat-operators
         
     intel-device-plugins:
-      name: intel-device-plugins-operators
+      name: intel-device-plugins-operator
       namespace: openshift-operators
       channel: alpha
       source: certified-operators

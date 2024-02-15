@@ -38,3 +38,4 @@ spec:
             sgx.intel.com/epc: "1Gi"
           limits:
             sgx.intel.com/epc: "1Gi"
+      restartPolicy: OnFailure

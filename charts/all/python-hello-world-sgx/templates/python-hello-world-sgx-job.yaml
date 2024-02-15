@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: python-hello-world-sgx
+spec:
+  parallelism: 1
+  completions: 1
+  activeDeadlineSeconds: 1800
+  backoffLimit: 6
+  template:
+    metadata:
+      name: python-hello-world-sgx
+    spec:
+      containers:
+      - name: python
+        image: seahorse911/python-hello-world:gramine
+        resources:
+          requests:
+            sgx.intel.com/epc: "1Gi"
+          limits:
+            sgx.intel.com/epc: "1Gi"
+      restartPolicy: OnFailure

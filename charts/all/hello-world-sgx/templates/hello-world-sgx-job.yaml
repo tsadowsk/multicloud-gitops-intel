@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: python-hello-world-sgx
+  name: hello-world-sgx
 spec:
   parallelism: 1
   completions: 1
@@ -9,11 +9,16 @@ spec:
   backoffLimit: 6
   template:
     metadata:
-      name: python-hello-world-sgx
+      name: hello-world-sgx
     spec:
       containers:
       - name: python
         image: seahorse911/python-hello-world:gramine
+        env:
+          - name: LC_ALL
+            value: C.utf8
+          - name: LANG
+            value: C.utf8
         resources:
           requests:
             sgx.intel.com/epc: "1Gi"

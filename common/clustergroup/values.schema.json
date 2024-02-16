@@ -210,6 +210,10 @@
         "applicationRetryLimit": {
           "type": "integer",
           "description": "Number of failed sync attempt retries; unlimited number of attempts if less than 0"
+        },
+        "sgx": {
+          "type": "boolean",
+          "description": "Turn on this flag to enable Intel Security Guard Extensions (SGX)"
         }
       },
       "required": [

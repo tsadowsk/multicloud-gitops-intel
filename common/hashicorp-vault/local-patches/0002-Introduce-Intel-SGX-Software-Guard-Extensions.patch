@@ -1,0 +1,64 @@
+diff -up -r vault/templates/_helpers.tpl vault/templates/_helpers.tpl
+--- vault/templates/_helpers.tpl	2024-01-18 16:31:13.000000000 +0100
++++ vault/templates/_helpers.tpl	2024-03-11 15:54:08.000000000 +0100
+@@ -215,7 +215,9 @@ file with IP addresses to make the out o
+ for users looking to use this chart with Consul Helm.
+ */}}
+ {{- define "vault.args" -}}
+-  {{ if or (eq .mode "standalone") (eq .mode "ha") }}
++  {{- if (not (.Values.server.args)) }}
++    {{ if or (eq .mode "standalone") (eq .mode "ha") }}
++          args:
+           - |
+             cp /vault/config/extraconfig-from-values.hcl /tmp/storageconfig.hcl;
+             [ -n "${HOST_IP}" ] && sed -Ei "s|HOST_IP|${HOST_IP?}|g" /tmp/storageconfig.hcl;
+@@ -225,10 +227,16 @@ for users looking to use this chart with
+             [ -n "${TRANSIT_ADDR}" ] && sed -Ei "s|TRANSIT_ADDR|${TRANSIT_ADDR?}|g" /tmp/storageconfig.hcl;
+             [ -n "${RAFT_ADDR}" ] && sed -Ei "s|RAFT_ADDR|${RAFT_ADDR?}|g" /tmp/storageconfig.hcl;
+             /usr/local/bin/docker-entrypoint.sh vault server -config=/tmp/storageconfig.hcl {{ .Values.server.extraArgs }}
+-   {{ else if eq .mode "dev" }}
++    {{ else if eq .mode "dev" }}
++          args:
+           - |
+             /usr/local/bin/docker-entrypoint.sh vault server -dev {{ .Values.server.extraArgs }}
+-  {{ end }}
++    {{ end }}
++  {{- else if eq .Values.server.args.pass "yes" }}
++    args:
++      {{ .Values.server.args.value }}
++  {{- else if eq .Values.server.args.pass "no" }}
++  {{- end }}
+ {{- end -}}
+
+ {{/*
+diff -up -r vault/templates/server-statefulset.yaml /home/tsadowsk/proj/openshift/multicloud-gitops-intel--check/common/hashicorp-vault/charts/vault/templates/server-statefulset.yaml
+--- vault/templates/server-statefulset.yaml	2023-11-16 23:06:42.000000000 +0100
++++ vault/templates/server-statefulset.yaml	2024-03-07 18:22:51.000000000 +0100
+@@ -77,10 +77,11 @@ spec:
+           {{ template "vault.resources" . }}
+           image: {{ .Values.server.image.repository }}:{{ .Values.server.image.tag | default "latest" }}
+           imagePullPolicy: {{ .Values.server.image.pullPolicy }}
++          {{- if .Values.server.command }}
+           command:
+-          - "/bin/sh"
+-          - "-ec"
+-          args: {{ template "vault.args" . }}
++            {{ .Values.server.command }}
++          {{- end }}
++          {{ template "vault.args" . }}
+           {{- template "server.statefulSet.securityContext.container" . }}
+           env:
+             - name: HOST_IP
+diff -up -r vault/values.openshift.yaml vault/values.openshift.yaml
+--- vault/values.openshift.yaml	2023-11-16 23:06:42.000000000 +0100
++++ vault/values.openshift.yaml	2024-03-06 15:25:24.000000000 +0100
+@@ -16,9 +16,5 @@ injector:
+     tag: "1.15.2-ubi"
+
+ server:
+-  image:
+-    repository: "registry.connect.redhat.com/hashicorp/vault"
+-    tag: "1.15.2-ubi"
+-
+   readinessProbe:
+     path: "/v1/sys/health?uninitcode=204"

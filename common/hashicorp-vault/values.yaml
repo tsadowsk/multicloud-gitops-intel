@@ -45,6 +45,17 @@ vault:
         storage "file" {
           path = "/vault/data"
         }
+    # Parameter args.pass can be trivalent:
+    # 'yes'                - args will be passed from values file (args.value field)
+    # 'no' or no args.pass - no args
+    # 'chart_default'      - default values are taken from Vault chart
+    args:
+      pass: "no"
+
+    volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: data-vault-0
 
     # These are automatically mounted in /vault/userconfig/<name>
     extraVolumes:
@@ -68,5 +79,6 @@ vault:
         # get vault.vault.svc/vault.vault.svc.cluster.local
         termination: "reencrypt"
     image:
-      repository: "docker.io/seahorse910/sgx-gramine"
-      tag: "rh-vault-no-docker-entrypoint-sgx-gramine"
+      repository: "quay.io/hybridcloudpatterns/sgx-protected-vault"
+      tag: "1.15.3-ubi"
+      pullPolicy: Always

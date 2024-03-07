@@ -8,9 +8,8 @@ clusterGroup:
     - golang-external-secrets
     - config-demo
     - hello-world
-
-  operatorgroupExcludes:
-    - openshift-operators
+    - openshift-operators:
+        operatorGroup: false
 
   subscriptions:
     acm:

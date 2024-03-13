@@ -12,50 +12,7 @@ vault:
     extraEnvironmentVars:
       VAULT_CACERT: /var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt
       VAULT_ADDR: https://vault.vault.svc.cluster.local:8200
-    sgx: true
-    resources:
-      limits:
-        sgx.intel.com/epc: 1Gi
-      requests:
-        sgx.intel.com/epc: 1Gi
-    statefulSet:
-      securityContext:
-        container:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-              - ALL
-            seccompProfile:
-              type: RuntimeDefault
-        pod:
-          fsGroup: 107
-          runAsGroup: 107
-          runAsUser: 100
-
-    standalone:
-      config: |
-        ui = true
-        disable_mlock = true
-        listener "tcp" {
-          address = "[::]:8200"
-          cluster_address = "[::]:8201"
-          tls_cert_file = "/vault/userconfig/vault-secret/tls.crt"
-          tls_key_file = "/vault/userconfig/vault-secret/tls.key"
-        }
-        storage "file" {
-          path = "/vault/data"
-        }
-    # Parameter args.pass can be trivalent:
-    # 'yes'                - args will be passed from values file (args.value field)
-    # 'no' or no args.pass - no args
-    # 'chart_default'      - default values are taken from Vault chart
-    args:
-      pass: "no"
-
-    volumes:
-    - name: data
-      persistentVolumeClaim:
-        claimName: data-vault-0
+    sgx: false
 
     # These are automatically mounted in /vault/userconfig/<name>
     extraVolumes:

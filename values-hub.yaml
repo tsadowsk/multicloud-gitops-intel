@@ -198,3 +198,58 @@ clusterGroup:
 #          operator: In
 #          values:
 #            - OpenShift
+
+vault:
+  server:
+    sgx: true
+    resources:
+      limits:
+        sgx.intel.com/epc: 1Gi
+      requests:
+        sgx.intel.com/epc: 1Gi
+    statefulSet:
+      securityContext:
+        container:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            seccompProfile:
+              type: RuntimeDefault
+        pod:
+          fsGroup: 107
+          runAsGroup: 107
+          runAsUser: 100
+    standalone:
+      config: |
+        ui = true
+        disable_mlock = true
+        listener "tcp" {
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+          tls_cert_file = "/vault/userconfig/vault-secret/tls.crt"
+          tls_key_file = "/vault/userconfig/vault-secret/tls.key"
+        }
+        storage "file" {
+          path = "/vault/data"
+        }
+    # Parameter args.pass can be trivalent:
+    # nil or empty         - default parameters
+    # 'yes'                - args will be passed from pattern's values file
+    # 'no'                 - no args
+    # This is needed to introduce parameters passing from pattern's values and gives flexibility
+    # around passing commandline to Vault container
+    args:
+      pass: "no"
+    volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: data-vault-0
+    # Wait till other operators i.e. Node Feature Discovery and Intel Device Plugins will be ready:
+    extraInitContainers:
+      - name: wait-for-idp
+        image: 'registry.redhat.io/rhel9/python-39:latest'
+        command:
+          - /bin/bash
+          - '-c'
+          - 'sleep 480'

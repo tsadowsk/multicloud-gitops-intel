@@ -44,4 +44,5 @@ vault:
         command:
           - /bin/bash
           - '-c'
-          - 'sleep 480'
+          - 'sleep 900'
+

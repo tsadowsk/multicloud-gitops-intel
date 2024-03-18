@@ -13,7 +13,7 @@ spec:
   resourceLabels:
     - sgx.intel.com/epc
   operand:
-    image: {{ .Values.global.images.nodeFeatureDiscovery }}
+    image: {{ .Values.global.image }}
     imagePullPolicy: Always
     servicePort: 12000
   workerConfig:

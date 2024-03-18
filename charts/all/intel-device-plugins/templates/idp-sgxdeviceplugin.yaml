@@ -9,8 +9,8 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:
-  image: {{ .Values.global.image }}
-  initImage: {{ .Values.global.initImage }}
+  image: {{ .Values.global.images.intelSGXDevicePlugins }}
+  initImage: {{ .Values.global.images.intelSGXDevicePluginsInit }}
   enclaveLimit: 110
   provisionLimit: 110
   logLevel: 4

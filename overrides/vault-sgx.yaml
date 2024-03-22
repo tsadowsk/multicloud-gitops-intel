@@ -37,12 +37,3 @@ vault:
     image:
       repository: quay.io/hybridcloudpatterns/sgx-protected-vault
       tag: 1.15.3-ubi
-    # Wait till other operators i.e. Node Feature Discovery and Intel Device Plugins will be ready:
-    extraInitContainers:
-      - name: wait-for-idp
-        image: 'registry.redhat.io/rhel9/python-39:latest'
-        command:
-          - /bin/bash
-          - '-c'
-          - 'sleep 900'
-

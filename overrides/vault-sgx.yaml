@@ -1,0 +1,48 @@
+# Below are values related to enablement of Intel Secure Guard Extensions (SGX)
+# Apart from setting vault.server.sgx to true, other names are also needed to enable SGX
+# If needed, please adjust below values according to your needs i.e. SGX enclave size etc.
+vault:
+  server:
+    sgx: true
+    resources:
+      limits:
+        sgx.intel.com/epc: 1Gi
+      requests:
+        sgx.intel.com/epc: 1Gi
+    statefulSet:
+      securityContext:
+        container:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            seccompProfile:
+              type: RuntimeDefault
+        pod:
+          fsGroup: 107
+          runAsGroup: 107
+          runAsUser: 100
+    # Parameter args.pass can be trivalent:
+    # nil or empty         - default parameters
+    # 'yes'                - args will be passed from pattern's values file
+    # 'no'                 - no args
+    # This is needed to introduce parameters passing from pattern's values and gives flexibility
+    # around passing commandline to Vault container
+    args:
+      pass: "no"
+    volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: data-vault-0
+    image:
+      repository: quay.io/hybridcloudpatterns/sgx-protected-vault
+      tag: 1.15.3-ubi
+    # Wait till other operators i.e. Node Feature Discovery and Intel Device Plugins will be ready:
+    extraInitContainers:
+      - name: wait-for-idp
+        image: 'registry.redhat.io/rhel9/python-39:latest'
+        command:
+          - /bin/bash
+          - '-c'
+          - 'sleep 900'
+

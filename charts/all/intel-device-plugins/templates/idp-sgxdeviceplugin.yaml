@@ -1,0 +1,18 @@
+# Copyright (c) 2024 Intel Corporation
+# SPDX-License-Identifier: Apache-2.0
+
+---
+apiVersion: deviceplugin.intel.com/v1
+kind: SgxDevicePlugin
+metadata:
+  name: sgxdeviceplugin-intel
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  image: {{ .Values.global.images.intelSGXDevicePlugins }}
+  initImage: {{ .Values.global.images.intelSGXDevicePluginsInit }}
+  enclaveLimit: 110
+  provisionLimit: 110
+  logLevel: 4
+  nodeSelector:
+    intel.feature.node.kubernetes.io/sgx: "true"

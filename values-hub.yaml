@@ -2,21 +2,41 @@ clusterGroup:
   name: hub
   isHubCluster: true
   namespaces:
+    - openshift-nfd
     - open-cluster-management
     - vault
     - golang-external-secrets
     - config-demo
     - hello-world
+    - openshift-operators:
+        operatorGroup: false
+
   subscriptions:
     acm:
       name: advanced-cluster-management
       namespace: open-cluster-management
       channel: release-2.10
       #csv: advanced-cluster-management.v2.6.1
+
+    nfd:
+      name: nfd
+      namespace: openshift-nfd
+      channel: stable
+      source: redhat-operators
+
+    intel-device-plugins:
+      name: intel-device-plugins-operator
+      namespace: openshift-operators
+      channel: alpha
+      source: certified-operators
+
   projects:
+    - openshift-nfd
     - hub
     - config-demo
     - hello-world
+    - openshift-operators
+
   # Explicitly mention the cluster-state based overrides we plan to use for this pattern.
   # We can use self-referential variables because the chart calls the tpl function with these variables defined
   sharedValueFiles:
@@ -38,6 +58,18 @@ clusterGroup:
   #   - '/overrides/values-{{ $.Values.global.hubClusterDomain }}.yaml'
   #   - '/overrides/values-{{ $.Values.global.localClusterDomain }}.yaml'
   applications:
+    nfd:
+      name: nfd
+      namespace: openshift-nfd
+      project: openshift-nfd
+      path: charts/all/nfd
+
+    intel-device-plugins:
+      name: intel-device-plugins
+      namespace: openshift-operators
+      project: openshift-operators
+      path: charts/all/intel-device-plugins
+
     acm:
       name: acm
       namespace: open-cluster-management
@@ -53,6 +85,8 @@ clusterGroup:
       namespace: vault
       project: hub
       path: common/hashicorp-vault
+      extraValueFiles:
+        - /overrides/vault-sgx.yaml
     golang-external-secrets:
       name: golang-external-secrets
       namespace: golang-external-secrets
@@ -166,3 +200,4 @@ clusterGroup:
 #          operator: In
 #          values:
 #            - OpenShift
+
